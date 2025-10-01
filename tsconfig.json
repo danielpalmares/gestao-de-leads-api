@@ -4,6 +4,7 @@
     // File Layout
     // "rootDir": "./src",
     // "outDir": "./dist",
+    "baseUrl": ".",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -40,5 +41,11 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
+    "paths": {
+      "@entities/*": ["src/domain/entities/*"],
+      "@use-cases/*": ["src/domain/use-cases/*"],
+      "@utils/*": ["src/utils/*"],
+      "@repositories/*": ["src/data/repositories/*"]
+    }
   }
 }
