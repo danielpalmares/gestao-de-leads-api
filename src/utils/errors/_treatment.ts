@@ -1,5 +1,5 @@
-import { DefaultError } from './DefaultError.js'
-import { ValidationError } from './ValidationError.js'
+import { DefaultError } from './DefaultError.ts'
+import { ValidationError } from './ValidationError.ts'
 import { type Response } from 'express'
 
 export const treatErrors = (error: unknown, response: Response) => {

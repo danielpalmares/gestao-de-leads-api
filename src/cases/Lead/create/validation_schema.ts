@@ -1,5 +1,5 @@
-import { ZodMessages } from 'src/utils/zod/messages.js'
-import { requiredString } from 'src/utils/zod/required.js'
+import { ZodMessages } from 'src/utils/zod/messages.ts'
+import { requiredString } from 'src/utils/zod/required.ts'
 import { z } from 'zod'
 
 export const createLeadSchema = z.object({

@@ -1,9 +1,9 @@
-import { Lead } from '@entities/Lead.js'
-import type { CreateLeadDTO } from './dto.js'
-import { createLeadSchema } from './validation_schema.js'
-import { ValidationError } from '@utils/errors/ValidationError.js'
-import { formatZodErrors } from '@utils/zod/mapper.js'
-import type { ILeadRepository } from '@repositories/interfaces/lead_repository.js'
+import { Lead } from '@entities/Lead.ts'
+import type { CreateLeadDTO } from './dto.ts'
+import { createLeadSchema } from './validation_schema.ts'
+import { ValidationError } from '@utils/errors/ValidationError.ts'
+import { formatZodErrors } from '@utils/zod/mapper.ts'
+import type { ILeadRepository } from '@repositories/interfaces/lead_repository.ts'
 
 export class CreateLeadCase {
   constructor(private readonly leadRepository: ILeadRepository) {}

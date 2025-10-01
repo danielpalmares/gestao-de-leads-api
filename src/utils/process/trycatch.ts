@@ -1,4 +1,4 @@
-import { treatErrors } from '../errors/_treatment.js'
+import { treatErrors } from '../errors/_treatment.ts'
 import { type Response } from 'express'
 
 export const executeProcess = async <T>(

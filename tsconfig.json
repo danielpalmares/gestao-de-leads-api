@@ -32,6 +32,8 @@
     // "noUnusedParameters": true,
     // "noFallthroughCasesInSwitch": true,
     // "noPropertyAccessFromIndexSignature": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
 
     // Recommended Options
     "strict": true,

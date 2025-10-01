@@ -1,7 +1,7 @@
-import { executeProcess } from '@utils/process/trycatch.js'
-import type { CreateLeadCase } from './create_lead_case.js'
+import { executeProcess } from '@utils/process/trycatch.ts'
+import type { CreateLeadCase } from './create_lead_case.ts'
 import type { Request, Response } from 'express'
-import type { Lead } from '@entities/Lead.js'
+import type { Lead } from '@entities/Lead.ts'
 
 export class CreateLeadController {
   constructor(private readonly createLeadCase: CreateLeadCase) {}
