@@ -47,7 +47,8 @@
       "@entities/*": ["src/domain/entities/*"],
       "@use-cases/*": ["src/domain/use-cases/*"],
       "@utils/*": ["src/utils/*"],
-      "@repositories/*": ["src/data/repositories/*"]
+      "@repositories/*": ["src/data/repositories/*"],
+      "@database/*": ["src/data/database/*"]
     }
   }
 }
