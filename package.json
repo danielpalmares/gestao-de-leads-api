@@ -8,13 +8,18 @@
   "type": "module",
   "scripts": {
     "dev": "tsx src/server.ts --watch",
-    "db:up": "docker-compose up --build -d",
+    "build": "tsup",
+    "start": "node dist/server.js",
+    "db:up": "docker-compose up -d postgres",
     "db:down": "docker-compose down",
     "db:reset": "docker-compose down && docker-compose up -d",
-    "db:migrate": "prisma migrate dev",
+    "db:migrate": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down",
+    "docker:prod": "docker-compose up --build -d"
   },
   "dependencies": {
     "@prisma/client": "^6.16.3",
@@ -25,9 +30,11 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@rollup/plugin-replace": "^6.0.2",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
+    "tsc-alias": "^1.8.16",
     "tsup": "^8.5.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"

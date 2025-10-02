@@ -67,16 +67,33 @@ A API estará disponível em `http://localhost:3000`
 
 ## 🗃️ Scripts Disponíveis
 
-| Script                | Descrição                                |
-| --------------------- | ---------------------------------------- |
-| `npm run dev`         | Inicia aplicação em modo desenvolvimento |
-| `npm run db:up`       | Inicia container PostgreSQL              |
-| `npm run db:down`     | Para container PostgreSQL                |
-| `npm run db:reset`    | Reinicia container PostgreSQL            |
-| `npm run db:migrate`  | Executa migrações do banco               |
-| `npm run db:studio`   | Abre Prisma Studio                       |
-| `npm run db:generate` | Gera cliente Prisma                      |
-| `npm run db:seed`     | Popula banco com dados de exemplo        |
+### Desenvolvimento
+
+| Script          | Descrição                                |
+| --------------- | ---------------------------------------- |
+| `npm run dev`   | Inicia aplicação em modo desenvolvimento |
+| `npm run build` | Compila aplicação com tsup               |
+| `npm start`     | Inicia aplicação em modo produção        |
+
+### Banco de Dados
+
+| Script                | Descrição                         |
+| --------------------- | --------------------------------- |
+| `npm run db:up`       | Inicia container PostgreSQL       |
+| `npm run db:down`     | Para container PostgreSQL         |
+| `npm run db:reset`    | Reinicia container PostgreSQL     |
+| `npm run db:migrate`  | Executa migrações do banco        |
+| `npm run db:studio`   | Abre Prisma Studio                |
+| `npm run db:generate` | Gera cliente Prisma               |
+| `npm run db:seed`     | Popula banco com dados de exemplo |
+
+### Docker
+
+| Script                | Descrição                                        |
+| --------------------- | ------------------------------------------------ |
+| `npm run docker:up`   | Inicia app + banco (modo desenvolvimento)        |
+| `npm run docker:down` | Para todos os containers                         |
+| `npm run docker:prod` | Inicia app + banco em background (modo produção) |
 
 ## 📊 Prisma Studio
 
@@ -88,7 +105,38 @@ npm run db:studio
 
 ## 🐳 Docker
 
-### Configuração do PostgreSQL
+### 🚀 Executar Aplicação Completa com Docker
+
+A aplicação pode ser executada completamente em containers Docker (Node.js + PostgreSQL):
+
+#### Modo Desenvolvimento (com logs visíveis)
+
+```bash
+npm run docker:up
+```
+
+#### Modo Produção (em background)
+
+```bash
+npm run docker:prod
+```
+
+#### Parar Containers
+
+```bash
+npm run docker:down
+```
+
+### 📦 O que está incluído
+
+- **PostgreSQL 15 Alpine** - Banco de dados
+- **Node.js 18 Alpine** - Aplicação API
+- **Healthcheck** - Aguarda banco estar pronto
+- **Auto Migration** - Executa migrações automaticamente
+- **Redes isoladas** - Comunicação segura entre containers
+- **Volumes persistentes** - Dados do banco mantidos
+
+### 🔧 Configuração do PostgreSQL
 
 O banco PostgreSQL roda em container Docker e usa as credenciais definidas no arquivo `.env`:
 
@@ -97,15 +145,63 @@ O banco PostgreSQL roda em container Docker e usa as credenciais definidas no ar
 - **Usuário:** Definido por `POSTGRES_USER` (padrão: leads_user)
 - **Senha:** Definida por `POSTGRES_PASSWORD` (padrão: leads_password)
 
-### Comandos Docker úteis
+### 🛠️ Desenvolvimento Local vs Docker
+
+#### Desenvolvimento Local (Recomendado para desenvolvimento)
 
 ```bash
-# Ver logs do PostgreSQL
-docker-compose logs postgres
+# Iniciar apenas o banco
+npm run db:up
 
-# Acessar container PostgreSQL (usando variáveis do .env)
-docker-compose exec postgres psql -U $POSTGRES_USER -d $POSTGRES_DB
+# Em outro terminal, rodar a aplicação
+npm run dev
 ```
+
+#### Docker Completo (Recomendado para produção/testes)
+
+```bash
+# Iniciar tudo junto
+npm run docker:up
+```
+
+### 📝 Comandos Docker Úteis
+
+```bash
+# Ver logs da aplicação
+docker-compose logs app -f
+
+# Ver logs do PostgreSQL
+docker-compose logs postgres -f
+
+# Acessar shell da aplicação
+docker-compose exec app sh
+
+# Acessar PostgreSQL
+docker-compose exec postgres psql -U leads_user -d leads_db
+
+# Rebuild forçado
+docker-compose up --build --force-recreate
+
+# Ver status dos containers
+docker-compose ps
+```
+
+### 🏗️ Build da Aplicação
+
+A aplicação usa **tsup** para compilação otimizada:
+
+```bash
+# Build local
+npm run build
+
+# Resultado em ./dist/server.js
+npm start
+```
+
+O Dockerfile possui multi-stage build:
+
+1. **Builder Stage** - Instala deps, gera Prisma Client, compila TypeScript
+2. **Production Stage** - Imagem lean apenas com o necessário para produção
 
 ## 🏗️ Arquitetura
 
@@ -461,6 +557,9 @@ DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST
 JWT_SECRET=sua-chave-secreta-super-segura
 AUTH_USERNAME=admin
 AUTH_PASSWORD=admin123
+
+# Application
+PORT=3000
 ```
 
 ### Variáveis disponíveis
@@ -476,6 +575,7 @@ AUTH_PASSWORD=admin123
 | `JWT_SECRET`        | Chave secreta do JWT    | Definir valor seguro   |
 | `AUTH_USERNAME`     | Usuário da API          | `admin`                |
 | `AUTH_PASSWORD`     | Senha da API            | `admin123`             |
+| `PORT`              | Porta da aplicação      | `3000`                 |
 
 ### ⚠️ Segurança
 
@@ -490,14 +590,15 @@ Em produção, certifique-se de:
 
 ### Stack Tecnológico
 
-- **Node.js** - Runtime JavaScript
+- **Node.js 18** - Runtime JavaScript
 - **TypeScript** - Tipagem estática
 - **Express.js** - Framework web
 - **Prisma** - ORM e query builder
-- **PostgreSQL** - Banco de dados relacional
+- **PostgreSQL 15** - Banco de dados relacional
 - **JWT** - Autenticação stateless
 - **Zod** - Validação de schemas
-- **Docker** - Containerização
+- **tsup** - Build tool otimizado
+- **Docker** - Containerização e orquestração
 
 ### Arquitetura
 
@@ -547,8 +648,9 @@ src/
 - ✅ **Tratamento de Erros** - Respostas consistentes
 - ✅ **Tipagem Forte** - TypeScript em 100% do código
 - ✅ **Banco Relacional** - PostgreSQL com Prisma
-- ✅ **Containerização** - Docker para desenvolvimento
-- ✅ **Documentação** - README completo
+- ✅ **Containerização** - Docker multi-stage builds
+- ✅ **Build Otimizado** - tsup com tree-shaking e minification
+- ✅ **Documentação** - README completo + Docker guide
 
 ## 🤝 Contribuição
 
