@@ -8,12 +8,22 @@ import type { ILeadRepository } from '@repositories/interfaces/lead_repository.t
 export class CreateLeadCase {
   constructor(private readonly leadRepository: ILeadRepository) {}
 
-  execute(dto: CreateLeadDTO): Promise<Lead> {
+  async execute(dto: CreateLeadDTO): Promise<Lead> {
     const parsedData = createLeadSchema.safeParse(dto)
 
     if (!parsedData.success) {
       const errors = formatZodErrors(parsedData.error)
       throw new ValidationError(errors)
+    }
+
+    const isEmailTaken = await this.leadRepository
+      .findAll({ email: parsedData.data.email })
+      .then(collection => collection.items.length > 0)
+
+    if (isEmailTaken) {
+      throw new ValidationError([
+        { message: 'Email já está em uso', field: 'email' }
+      ])
     }
 
     const lead = new Lead({
